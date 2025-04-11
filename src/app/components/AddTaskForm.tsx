@@ -1,8 +1,9 @@
+"use client";
 import { useState } from "react";
 import { Task } from "../types/task";
 
 type Props = {
-    onAdd: (task: Task) => void;
+    onAdd: (task: Omit<Task, "id">) => Promise<void>;
 };
 
 export default function AddTaskForm({ onAdd }: Props) {
@@ -11,24 +12,23 @@ export default function AddTaskForm({ onAdd }: Props) {
     const [priority, setPriority] = useState<Task["priority"]>("medium");
     const [dueDate, setDueDate] = useState("");
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!title || !dueDate) return;
 
-        const newTask: Task = {
-            id: Date.now(),
+        await onAdd({
             title,
             status,
             priority,
             dueDate,
-        };
+        });
 
-        onAdd(newTask);
         setTitle("");
         setStatus("pending");
         setPriority("medium");
         setDueDate("");
     };
+
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">

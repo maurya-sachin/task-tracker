@@ -1,14 +1,19 @@
+"use client";
 import { useEffect, useState } from "react";
-import tasksJson from "./data/tasks.json";
 import { Task } from "./types/task";
 import TaskCard from "./components/TaskCard";
 import { groupTasksByDate } from "./utils/groupByDate";
 import { motion } from "framer-motion";
+import AddTaskForm from "./components/AddTaskForm";
+import { Dialog } from "@headlessui/react";
+import { HiPlus } from "react-icons/hi";
 
-function App() {
+export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<"all" | Task["status"]>("all");
+  const [isAddOpen, setIsAddOpen] = useState(false);
+
   const filteredTasks = tasks.filter((task) => {
     const matchesStatus =
       statusFilter === "all" || task.status === statusFilter;
@@ -20,9 +25,27 @@ function App() {
 
   const grouped = groupTasksByDate(filteredTasks);
 
+  const handleAddTask = async (newTask: Omit<Task, "id">): Promise<void> => {
+    const res = await fetch("/api/tasks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newTask),
+    });
+
+    if (res.ok) {
+      const tasks = await (await fetch("/api/tasks")).json();
+      setTasks(tasks);
+    }
+  };
+
 
   useEffect(() => {
-    setTasks(tasksJson);
+    const fetchTasks = async () => {
+      const res = await fetch("/api/tasks");
+      const data = await res.json();
+      setTasks(data);
+    };
+    fetchTasks();
   }, []);
 
   return (
@@ -46,6 +69,12 @@ function App() {
               {status}
             </button>
           ))}
+          <button
+            onClick={() => setIsAddOpen(true)}
+            className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition"
+          >
+            <HiPlus className="w-6 h-6" />
+          </button>
         </div>
       </div>
       {Object.entries(grouped).map(([groupName, groupTasks]) => (
@@ -69,8 +98,21 @@ function App() {
           </ul>
         </div>
       ))}
+
+      <Dialog open={isAddOpen} onClose={() => setIsAddOpen(false)} className="relative z-50">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
+
+        <div className="fixed inset-0 flex items-center justify-center p-4">
+          <Dialog.Panel className="w-full max-w-md rounded bg-white p-6 space-y-4 shadow-xl">
+            <Dialog.Title className="text-lg font-bold">Add New Task</Dialog.Title>
+
+            <AddTaskForm
+              onAdd={handleAddTask}
+            />
+          </Dialog.Panel>
+        </div>
+      </Dialog>
+
     </div>
   );
 }
-
-export default App;

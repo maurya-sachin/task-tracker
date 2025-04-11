@@ -1,3 +1,4 @@
+"use client";
 import dayjs from "dayjs";
 import { Task } from "../types/task";
 import { MdOutlineFlag, MdDateRange } from "react-icons/md";
