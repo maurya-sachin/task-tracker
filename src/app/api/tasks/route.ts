@@ -1,25 +1,28 @@
-import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-
-const filePath = path.join(process.cwd(), "tasks.json");
+import { NextRequest, NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
+import { addTask, getAllTasks } from "@/app/lib/tasks";
 
 // GET: Read tasks
 export async function GET() {
-  const fileData = fs.readFileSync(filePath, "utf-8");
-  const tasks = JSON.parse(fileData);
+  const tasks = await getAllTasks();
   return NextResponse.json(tasks);
 }
 
 // POST: Add task
-export async function POST(req: Request) {
-  const newTask = await req.json();
-  const fileData = fs.readFileSync(filePath, "utf-8");
-  const tasks = JSON.parse(fileData);
-
-  newTask.id = Date.now();
-  tasks.unshift(newTask); // Add to top
-
-  fs.writeFileSync(filePath, JSON.stringify(tasks, null, 2), "utf-8");
-  return NextResponse.json({ message: "Task added", task: newTask });
+export async function POST(req: NextRequest) {
+  try {
+    const newTask = await req.json();
+    const task = await addTask(newTask);
+    
+    // Revalidate the home page after adding a task
+    revalidatePath("/");
+    
+    return NextResponse.json({ message: "Task added", task }, { status: 201 });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Failed to add task" },
+      { status: 500 }
+    );
+  }
 }

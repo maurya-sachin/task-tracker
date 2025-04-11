@@ -29,10 +29,8 @@ export default function AddTaskForm({ onAdd }: Props) {
         setDueDate("");
     };
 
-
     return (
         <form onSubmit={handleSubmit} className="space-y-5">
-
             <input
                 type="text"
                 placeholder="Task title"
