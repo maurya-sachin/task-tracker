@@ -31,12 +31,12 @@ export default function AddTaskForm({ onAdd }: Props) {
 
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
 
             <input
                 type="text"
                 placeholder="Task title"
-                className="w-full border p-2 rounded"
+                className="w-full border-2 border-indigo-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 bg-white text-gray-800 placeholder-gray-500 font-medium"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
@@ -46,7 +46,7 @@ export default function AddTaskForm({ onAdd }: Props) {
                 <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value as "pending" | "in-progress" | "completed")}
-                    className="w-full border p-2 rounded"
+                    className="w-full border-2 border-indigo-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 bg-white text-gray-800 font-medium cursor-pointer"
                 >
                     <option value="pending">Pending</option>
                     <option value="in-progress">In Progress</option>
@@ -56,7 +56,7 @@ export default function AddTaskForm({ onAdd }: Props) {
                 <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as Task["priority"])}
-                    className="w-full border p-2 rounded"
+                    className="w-full border-2 border-indigo-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 bg-white text-gray-800 font-medium cursor-pointer"
                 >
                     <option value="low">Low</option>
                     <option value="medium">Medium</option>
@@ -66,7 +66,7 @@ export default function AddTaskForm({ onAdd }: Props) {
 
             <input
                 type="date"
-                className="w-full border p-2 rounded"
+                className="w-full border-2 border-indigo-200 p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 bg-white text-gray-800 font-medium cursor-pointer"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
                 required
@@ -74,7 +74,7 @@ export default function AddTaskForm({ onAdd }: Props) {
 
             <button
                 type="submit"
-                className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-[1.02] transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2"
             >
                 Add Task
             </button>

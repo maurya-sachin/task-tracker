@@ -49,70 +49,97 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
-      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 p-4 md:p-8">
+      <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <input
           type="text"
           placeholder="Search tasks..."
-          className="p-2 rounded border w-full md:w-64"
+          className="p-3 rounded-lg border-2 border-indigo-200 w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition-all duration-300 bg-white text-gray-800 placeholder-gray-500 font-medium shadow-sm"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
 
-        <div className="flex gap-2">
+        <div className="flex gap-3 flex-wrap">
           {["all", "pending", "in-progress", "completed"].map((status) => (
             <button
               key={status}
-              className={`px-3 py-1 rounded-full border ${statusFilter === status ? "bg-blue-600 text-white" : "bg-white text-gray-600 border-gray-300"}`}
+              className={`px-4 py-2 rounded-lg border-2 transition-all duration-300 transform hover:scale-105 ${
+                statusFilter === status 
+                ? "bg-gradient-to-r from-indigo-600 to-purple-600 text-white border-transparent shadow-lg" 
+                : "bg-white/80 backdrop-blur-sm text-gray-700 border-indigo-200 hover:border-indigo-400"
+              }`}
               onClick={() => setStatusFilter(status as "all" | Task["status"])}
             >
-              {status}
+              {status.charAt(0).toUpperCase() + status.slice(1)}
             </button>
           ))}
-          <button
+          <motion.button
             onClick={() => setIsAddOpen(true)}
-            className="fixed bottom-6 right-6 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition"
+            className="fixed bottom-8 right-8 bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
           >
             <HiPlus className="w-6 h-6" />
-          </button>
+          </motion.button>
         </div>
       </div>
       {Object.entries(grouped).map(([groupName, groupTasks]) => (
-        <div key={groupName} className="mb-6">
-          <h2 className="text-lg font-bold text-gray-700 bg-gray-50 px-2 py-1 rounded-md shadow-inner">
+        <motion.div 
+          key={groupName} 
+          className="mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-xl font-bold text-gray-800 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-lg shadow-sm mb-4 inline-block">
             {groupName}
           </h2>
 
-          <ul className="space-y-3">
-            {groupTasks.map(task => (
-              <li key={task.id}>
+          <ul className="space-y-4">
+            {groupTasks.map((task, index) => (
+              <motion.li 
+                key={task.id}
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
                 <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.2 }}
                 >
                   <TaskCard task={task} />
                 </motion.div>
-              </li>
+              </motion.li>
             ))}
           </ul>
-        </div>
+        </motion.div>
       ))}
 
       <Dialog open={isAddOpen} onClose={() => setIsAddOpen(false)} className="relative z-50">
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" aria-hidden="true" />
+        <motion.div 
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm" 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          aria-hidden="true" 
+        />
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="w-full max-w-md rounded bg-white p-6 space-y-4 shadow-xl">
-            <Dialog.Title className="text-lg font-bold">Add New Task</Dialog.Title>
+          <Dialog.Panel 
+            as={motion.div}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className="w-full max-w-md rounded-xl bg-white/90 backdrop-blur-sm p-6 space-y-4 shadow-xl border-2 border-indigo-100"
+          >
+            <Dialog.Title className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Add New Task
+            </Dialog.Title>
 
-            <AddTaskForm
-              onAdd={handleAddTask}
-            />
+            <AddTaskForm onAdd={handleAddTask} />
           </Dialog.Panel>
         </div>
       </Dialog>
-
     </div>
   );
 }

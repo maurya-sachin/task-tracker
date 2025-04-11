@@ -4,7 +4,6 @@ import { Task } from "../types/task";
 import { MdOutlineFlag, MdDateRange } from "react-icons/md";
 import { FaSpinner, FaCheckCircle, FaPauseCircle } from "react-icons/fa";
 
-
 type Props = {
     task: Task;
 };
@@ -12,52 +11,50 @@ type Props = {
 function getStatusColor(status: string) {
     switch (status) {
         case "pending":
-            return "bg-yellow-500/10 text-yellow-600 font-medium";
+            return "bg-yellow-100 text-yellow-700 font-semibold border border-yellow-200";
         case "completed":
-            return "bg-green-500/10 text-green-600 font-medium";
+            return "bg-green-100 text-green-700 font-semibold border border-green-200";
         case "in-progress":
-            return "bg-blue-500/10 text-blue-600 font-medium";
+            return "bg-blue-100 text-blue-700 font-semibold border border-blue-200";
         default:
-            return "bg-gray-100 text-gray-800";
+            return "bg-gray-100 text-gray-800 border border-gray-200";
     }
 }
 
 function getPriorityColor(priority: string) {
     switch (priority) {
         case "high":
-            return "bg-red-500/10 text-red-600 font-medium";
+            return "bg-red-100 text-red-700 font-semibold border border-red-200";
         case "medium":
-            return "bg-orange-500/10 text-orange-600 font-medium";
+            return "bg-orange-100 text-orange-700 font-semibold border border-orange-200";
         case "low":
-            return "bg-gray-500/10 text-gray-600 font-medium";
+            return "bg-gray-100 text-gray-700 font-semibold border border-gray-200";
         default:
-            return "bg-gray-100 text-gray-800";
+            return "bg-gray-100 text-gray-800 border border-gray-200";
     }
 }
 
-
 export default function TaskCard({ task }: Props) {
     return (
-        <div className="bg-white p-4 shadow-sm rounded-lg border hover:shadow-md transition-all duration-200">
-            <div className="font-semibold text-lg">{task.title}</div>
-            <div className="mt-2 flex flex-wrap gap-2 text-sm">
-                <span className={`flex items-center gap-1 px-2 py-1 rounded-full ${getStatusColor(task.status)}`}>
-                    {task.status === "pending" && <FaPauseCircle />}
-                    {task.status === "in-progress" && <FaSpinner className="animate-spin" />}
-                    {task.status === "completed" && <FaCheckCircle />}
-                    {task.status}
+        <div className="bg-white/90 backdrop-blur-sm p-5 shadow-lg rounded-xl border border-indigo-100 hover:shadow-xl hover:scale-[1.02] transition-all duration-300">
+            <div className="font-bold text-lg text-gray-800 mb-3">{task.title}</div>
+            <div className="flex flex-wrap gap-3 text-sm">
+                <span className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${getStatusColor(task.status)}`}>
+                    {task.status === "pending" && <FaPauseCircle className="text-yellow-600" />}
+                    {task.status === "in-progress" && <FaSpinner className="animate-spin text-blue-600" />}
+                    {task.status === "completed" && <FaCheckCircle className="text-green-600" />}
+                    {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
                 </span>
 
-                <span className={`flex items-center gap-1 px-2 py-1 rounded-full ${getPriorityColor(task.priority)}`}>
-                    <MdOutlineFlag />
-                    {task.priority}
+                <span className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${getPriorityColor(task.priority)}`}>
+                    <MdOutlineFlag className={`text-${task.priority === 'high' ? 'red' : task.priority === 'medium' ? 'orange' : 'gray'}-600`} />
+                    {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
                 </span>
 
-                <span className="flex items-center gap-1 text-gray-600">
-                    <MdDateRange />
+                <span className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 font-semibold border border-indigo-100">
+                    <MdDateRange className="text-indigo-600" />
                     {dayjs(task.dueDate).format("DD MMM, YYYY")}
                 </span>
-
             </div>
         </div>
     );
