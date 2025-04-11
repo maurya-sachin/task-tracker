@@ -26,7 +26,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 p-4">
-      <div className="mb-6 flex flex-col md:flex-row md:items-center gap-4">
+      <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <input
           type="text"
           placeholder="Search tasks..."
@@ -39,7 +39,7 @@ function App() {
           {["all", "pending", "in-progress", "completed"].map((status) => (
             <button
               key={status}
-              className={`px-3 py-1 rounded ${statusFilter === status ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"}`}
+              className={`px-3 py-1 rounded-full border ${statusFilter === status ? "bg-blue-600 text-white" : "bg-white text-gray-600 border-gray-300"}`}
               onClick={() => setStatusFilter(status as "all" | Task["status"])}
             >
               {status}
@@ -49,7 +49,9 @@ function App() {
       </div>
       {Object.entries(grouped).map(([groupName, groupTasks]) => (
         <div key={groupName} className="mb-6">
-          <h2 className="text-xl font-bold mb-2">{groupName}</h2>
+          <h2 className="text-xl font-semibold text-gray-800 border-b pb-1 mb-2">
+            {groupName}
+          </h2>
           <ul className="space-y-3">
             {groupTasks.map(task => (
               <li key={task.id}>
