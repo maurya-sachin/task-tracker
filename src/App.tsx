@@ -39,11 +39,8 @@ function App() {
           {["all", "pending", "in-progress", "completed"].map((status) => (
             <button
               key={status}
-              className={`px-3 py-1 rounded ${statusFilter === status
-                ? "bg-blue-600 text-white"
-                : "bg-gray-200 text-gray-700"
-                }`}
-              onClick={() => setStatusFilter(status as any)}
+              className={`px-3 py-1 rounded ${statusFilter === status ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700"}`}
+              onClick={() => setStatusFilter(status as "all" | Task["status"])}
             >
               {status}
             </button>
